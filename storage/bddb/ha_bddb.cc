@@ -97,7 +97,7 @@ static handler *bddb_create_handler(handlerton *hton,
                                        TABLE_SHARE *table, 
                                        MEM_ROOT *mem_root);
 
-handlerton *bddb_hton;
+static struct handlerton *bddb_hton_ptr;
 
 /* Interface to mysqld, to check system tables supported by SE */
 static const char* bddb_system_database();
@@ -115,7 +115,8 @@ static int bddb_init_func(void *p)
 {
   DBUG_ENTER("bddb_init_func");
 
-  bddb_hton= (handlerton *)p;
+  handlerton *bddb_hton=                (handlerton)*p;
+  bddb_hton_ptr=                        bddb_hton; 
   bddb_hton->state=                     SHOW_OPTION_YES;
   bddb_hton->db_type=                   DB_TYPE_UNKOWN;
   bddb_hton->create=                    bddb_create_handler;
@@ -876,10 +877,28 @@ ha_rows ha_bddb::records_in_range(uint inx, key_range *min_key,
   ha_create_table() in handle.cc
 */
 
+int parse_data_dir(HA_CREATE_INFO* create_info, char* data_file_dir);
+
 int ha_bddb::create(const char *name, TABLE *table_arg,
                        HA_CREATE_INFO *create_info)
 {
   DBUG_ENTER("ha_bddb::create");
+
+  THD*            thd = ha_thd();
+  char*           data_file_dir;
+  int             err;
+  
+  DBUG_ASSERT(thd != NULL);
+  DBUG_ASSERT(create_info != NULL);
+
+  err= parse_data_dir(create_info, data_file_dir)
+  if (err) DBUG_RETURN(err);
+  file = ::open(name, create_flag, 0);
+
+
+
+  
+
   /*
     This is not implemented but we want someone to be able to see that it
     works.
