@@ -93,6 +93,14 @@
 #include "probes_mysql.h"
 #include "sql_plugin.h"
 
+/* tom code start from here */
+static int bddb_create_table_def(char* name, TABLE table) {
+  /* first let's create the ibd file */
+  
+};
+
+
+
 static handler *bddb_create_handler(handlerton *hton,
                                        TABLE_SHARE *table, 
                                        MEM_ROOT *mem_root);
@@ -897,10 +905,12 @@ ha_rows ha_bddb::records_in_range(uint inx, key_range *min_key,
   ha_create_table() in handle.cc
 */
 
-int ha_bddb::create(const char* name, TABLE* table_arg,
+int ha_bddb::create(const char* name, TABLE* table,
                        HA_CREATE_INFO* create_info)
 {
   DBUG_ENTER("ha_bddb::create");
+  
+  bddb_create_table_def(name, table);
   /*
     This is not implemented but we want someone to be able to see that it
     works.
