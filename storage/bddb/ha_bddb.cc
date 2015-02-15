@@ -94,8 +94,19 @@
 #include "sql_plugin.h"
 
 /* tom code start from here */
+ulint bddb_create_table_umask = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 static int bddb_create_table_def(char* name, TABLE table) {
   /* first let's create the ibd file */
+  int fd;
+  fd = open(name, O_WRONLY, bddb_create_table_umask);
+  int ret = init_tablespace(int fd, char* name)
+
+  /* write the head data */
+  Page* head_page = new Page();
+  head_page->write(fd);
+
+  close(fd);
+  
   
 };
 
