@@ -13,6 +13,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
 
-SET(EXAMPLE_PLUGIN_DYNAMIC "ha_example")
-SET(EXAMPLE_SOURCES ha_example.cc)
+SET(EXAMPLE_PLUGIN_DYNAMIC "ha_bddb")
+SET(EXAMPLE_SOURCES ha_bddb.cc)
 MYSQL_ADD_PLUGIN(example ${EXAMPLE_SOURCES} STORAGE_ENGINE MODULE_ONLY)

@@ -1,5 +1,11 @@
-#include <my_base.h>
-#define PAGESIZE 16384  //16k
+#include "mis.h"
+
+template<typename T>
+class ColumnValue {
+  T value;
+};
+
+/*
 class Column {
   enum          type;
   int           size;
@@ -32,4 +38,4 @@ class Table {
 
     
 }
-
+*/

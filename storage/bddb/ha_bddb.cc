@@ -87,28 +87,50 @@
     -Brian
 */
 
+
 #include "sql_priv.h"
 #include "sql_class.h"           // MYSQL_HANDLERTON_INTERFACE_VERSION
 #include "ha_bddb.h"
 #include "probes_mysql.h"
 #include "sql_plugin.h"
 
-/* tom code start from here */
+#include "page.h"
+/* tom start  */
 ulint bddb_create_table_umask = S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP;
 static int bddb_create_table_def(char* name, TABLE table) {
   /* first let's create the ibd file */
   int fd;
   fd = open(name, O_WRONLY, bddb_create_table_umask);
-  int ret = init_tablespace(int fd, char* name)
 
   /* write the head data */
   Page* head_page = new Page();
-  head_page->write(fd);
+  char* buf = char[PAGESIZE];
+  char* oldbuf = buf;
+  buf += F_SPACE_COLUMNS_LIST;
+
+  int numCols=0, type, index, offset=0;
+  for (Field** field = table->s->field; *field; field++) {  //will it end???
+    numCols++;
+    index = field->field_index;
+    intstore(buf, index, S_SPACE_COLUMN_ID);
+    buf += S_SPACE_COLUMN_ID;
+    type = (int)field->type();
+    intstore(buf, type, S_SPACE_COLUMN_TYPE);
+    buf += S_SPACE_COLUMN_TYPE;
+    intstore(buf, 0, S_SPACE_COLUMN_PTR);
+  }
+  buf = oldbuf;
+  buf += F_SPACE_NUM_COLUMNS;
+  intstore(buf, numCols, S_SPACE_NUM_COLUMNS);
+  buf += F_SPACE_NEXT_PAGE;
+  intstore(buf, 0, S_SPACE_NEXT_PAGE);
+  head_page->write(buf,PAGESIZE);
+  head_page->store(fd,0);
 
   close(fd);
-  
-  
 };
+
+/* tom end */
 
 
 
