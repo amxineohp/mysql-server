@@ -1,0 +1,1 @@
+g++ -g  -o test tabCRT.cc page.cc  -I /home/cos1/github/mysql-server/bld/include -I $msdir/include

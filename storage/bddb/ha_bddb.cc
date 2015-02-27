@@ -122,8 +122,8 @@ static int bddb_create_table_def(char* name, TABLE table) {
   buf = oldbuf;
   buf += F_SPACE_NUM_COLUMNS;
   intstore(buf, numCols, S_SPACE_NUM_COLUMNS);
-  buf += F_SPACE_NEXT_PAGE;
-  intstore(buf, 0, S_SPACE_NEXT_PAGE);
+  buf += F_SPACE_FREE_LIST;
+  intstore(buf, 0, S_SPACE_FREE_LIST);
   head_page->write(buf,PAGESIZE);
   head_page->store(fd,0);
 
